@@ -12,6 +12,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.0")
     runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.0")
     implementation(kotlin("stdlib:1.3.50"))
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
     testImplementation("junit:junit:4.12")
 }
 
