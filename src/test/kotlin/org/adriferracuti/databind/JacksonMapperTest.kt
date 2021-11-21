@@ -25,14 +25,14 @@ class JacksonMapperTest {
     @Test
     fun `test jsonDecode does not throw exceptions`() {
         // it does not throw errors, even though the real type seems to be LinkedHashMap<String<ArrayList<ArrayList<String>>>>
-        val myPairs1: MapOfPairs = json.jsonDecode()
+        @Suppress("UNUSED_VARIABLE") val myPairs1: MapOfPairs = json.jsonDecode()
     }
 
     @Test(expected = MismatchedInputException::class)
     fun `test jsonDecode2 does not throw exceptions`() {
         // it throws a "Cannot deserialize instance of `kotlin.Pair` out of START_ARRAY token" error,
         // because the returned type does not match
-        val myPairs1: MapOfPairs = json.jsonDecode2()
+        @Suppress("UNUSED_VARIABLE") val myPairs1: MapOfPairs = json.jsonDecode2()
     }
 
     @Test(expected = MismatchedInputException::class)
@@ -41,6 +41,6 @@ class JacksonMapperTest {
 
         // it throws a "Cannot deserialize instance of `kotlin.Pair` out of START_ARRAY token" error,
         // because the returned type does not match
-        val myPairs2: MapOfPairs = mapper.readValue(json)
+        @Suppress("UNUSED_VARIABLE") val myPairs2: MapOfPairs = mapper.readValue(json)
     }
 }
