@@ -1,14 +1,17 @@
 package org.adriferracuti.databind
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import org.adriferracuti.jackson.Foo
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
 
+@Language("JSON")
 private const val JSON = """{
   "locale": "es-ES",
   "localesUsingBuiltinDeserializer": [
@@ -33,7 +36,7 @@ class JacksonDeserializerTest(
 
         assertEquals(Locale.forLanguageTag("es-ES"), foo.locale)
 
-        /** @see com.fasterxml.jackson.databind.deser.std.FromStringDeserializer */
+        /** @see com.fasterxml.jackson.databind.deser.std.FromStringDeserializer.Std */
         assertEquals(listOf(Locale.forLanguageTag("it-IT")), foo.localesUsingBuiltinDeserializer)
 
         /** @see org.adriferracuti.jackson.LocaleDeserializer */
@@ -45,6 +48,22 @@ class JacksonDeserializerTest(
         val foo: Foo = mapperAutowired.readValue(JSON, Foo::class.java)
 
         assertEquals(Locale.forLanguageTag("de-DE"), foo.locale)
+        assertEquals(listOf(Locale.forLanguageTag("de-DE")), foo.localesUsingBuiltinDeserializer)
+        assertEquals(listOf(Locale.forLanguageTag("de-DE")), foo.localesUsingCustomDeserializer)
+    }
+
+    @Test
+    fun `Given deserializer autowired via @JsonComponent and simple field is missing, when deserialized, then a default value en-CA is provided`() {
+        val JSON = """{
+  "localesUsingBuiltinDeserializer": [
+    "it-IT"
+  ],
+  "localesUsingCustomDeserializer": [
+    "en-GB"
+  ]
+}"""
+        val foo: Foo = mapperAutowired.readValue(JSON, Foo::class.java)
+        assertEquals(Locale.CANADA, foo.locale)
         assertEquals(listOf(Locale.forLanguageTag("de-DE")), foo.localesUsingBuiltinDeserializer)
         assertEquals(listOf(Locale.forLanguageTag("de-DE")), foo.localesUsingCustomDeserializer)
     }
