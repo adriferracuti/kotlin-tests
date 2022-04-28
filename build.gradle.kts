@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("base")
     id("idea")
-    kotlin("jvm") version "1.6.0"
-    id ("org.jetbrains.kotlinx.benchmark") version "0.3.1"
+    kotlin("jvm") version "1.6.20"
+    id("org.jetbrains.kotlinx.benchmark") version "0.3.1"
     id("org.springframework.boot") version "2.6.3"
 
     // Pins the dependency versions using the spring BOM
-    id ("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
 }
 
 //TODO recheck
@@ -30,15 +30,14 @@ repositories {
     mavenCentral()
 }
 
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+kotlin {
+    jvmToolchain { // Configures Java toolchain both for Kotlin and Java tasks.
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(11))
+    }
 }
 
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.register<CacheableCopyTask>("cacheableCopy", File("README.md"))
