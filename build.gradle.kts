@@ -11,6 +11,10 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
 }
 
+buildscript {
+    apply(from = "test-buildscript.gradle.kts")
+}
+
 //TODO recheck
 dependencies {
     implementation(kotlin("stdlib"))
